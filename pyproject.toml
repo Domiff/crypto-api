@@ -5,6 +5,7 @@ description = "Deribit crypto exchange client"
 requires-python = ">=3.14"
 dependencies = [
     "aiohttp>=3.13.3",
+    "alembic>=1.18.1",
     "asyncpg>=0.31.0",
     "celery>=5.6.2",
     "fastapi[standard]>=0.128.0",
