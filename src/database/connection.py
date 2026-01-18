@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from src.settings.config import settings
 
 
-engine = create_async_engine(settings.database.db_url)
-async_session = async_sessionmaker(engine, expire_on_commit=False)
+fast_api_engine = create_async_engine(settings.database.db_url)
+async_session = async_sessionmaker(fast_api_engine, expire_on_commit=False)
 
 
 async def get_session():
@@ -16,3 +16,11 @@ async def get_session():
 
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
+
+
+def create_celery_sessionmaker():
+    celery_engine = create_async_engine(
+        settings.database.db_url,
+        pool_pre_ping=True,
+    )
+    return async_sessionmaker(celery_engine, expire_on_commit=False)
