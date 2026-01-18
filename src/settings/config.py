@@ -16,6 +16,10 @@ class Database(Base):
     POSTGRES_HOST: str
     POSTGRES_PORT: int
 
+    @property
+    def db_url(self) -> str:
+        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
 
 class Api(Base):
     BASE_URL: str
