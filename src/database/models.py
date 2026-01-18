@@ -11,9 +11,9 @@ class Base(DeclarativeBase):
         return f"{cls.__name__.lower()}s"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    index_price: Mapped[str]
+    index_price: Mapped[float]
     instrument_name: Mapped[str]
-    timestamp: Mapped[datetime]
+    timestamp: Mapped[int]
 
 
 class Btc(Base):
