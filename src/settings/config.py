@@ -1,11 +1,17 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Base(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file="../../.env",
+        env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
         env_nested_delimiter="__",
+        extra="allow",
     )
 
 
@@ -18,7 +24,10 @@ class Database(Base):
 
     @property
     def db_url(self) -> str:
-        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        return (
+            f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@"
+            f"{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        )
 
 
 class Api(Base):
