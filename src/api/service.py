@@ -37,17 +37,23 @@ async def get_last_price(session: AsyncSession, ticker: str):
     )
 
 
-async def get_ticker_with_date_filter(session: AsyncSession, ticker: str, date_start: datetime, date_end: datetime):
+async def get_ticker_with_date_filter(
+    session: AsyncSession, ticker: str, date_start: datetime, date_end: datetime
+):
     start_timestamp = date_start.timestamp()
     end_timestamp = date_end.timestamp()
 
     if ticker == "btc":
-        query = select(Btc).where(Btc.timestamp >= start_timestamp, Btc.timestamp <= end_timestamp)
+        query = select(Btc).where(
+            Btc.timestamp >= start_timestamp, Btc.timestamp <= end_timestamp
+        )
         btc = await session.execute(query)
         btc = await session.execute(query)
         return btc.scalars().all()
     elif ticker == "eth":
-        query = select(Eth).where(Eth.timestamp >= start_timestamp, Eth.timestamp <= end_timestamp)
+        query = select(Eth).where(
+            Eth.timestamp >= start_timestamp, Eth.timestamp <= end_timestamp
+        )
         eth = await session.execute(query)
         return eth.scalars().all()
     raise HTTPException(

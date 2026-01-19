@@ -28,10 +28,7 @@ async def last_price(session: SessionDep, ticker: ticker_query):
 
 @router.get("/date-filter")
 async def ticker_with_date_filter(
-        session: SessionDep,
-        ticker: ticker_query,
-        start_date: date,
-        end_date: date
+    session: SessionDep, ticker: ticker_query, start_date: date, end_date: date
 ):
     """
     Get all cryptocurrency with date filter
