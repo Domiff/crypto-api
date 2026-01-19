@@ -56,7 +56,7 @@ docker compose up --build
 docker compose exec web alembic upgrade head
 ```
 
-
+---
 
 ## Design decisions
 
