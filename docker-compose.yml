@@ -8,5 +8,40 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  api:
+    build:
+      dockerfile: Dockerfile
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8080
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pg
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+
+  celery-worker:
+    build: .
+    command: celery -A src.settings.celery_app worker -l info --beat
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - api
+    env_file:
+      - .env
+
 volumes:
   pgdata:
+  rabbitmq_data:
