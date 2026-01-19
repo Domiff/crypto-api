@@ -36,9 +36,14 @@ class Api(Base):
     ETH: str
 
 
+class Celery(Base):
+    CELERY_BROKER_URL: str
+
+
 class Settings(Base):
     database: Database = Database()
     api: Api = Api()
+    celery: Celery = Celery()
 
 
 settings = Settings()
