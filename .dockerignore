@@ -1,0 +1,29 @@
+# Byte-code files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+
+# Development environment files and directories
+.idea/
+.vscode/
+*.swp
+.git/
+.gitignore
+
+# Testing and build artifacts
+.pytest_cache/
+htmlcov/
+.tox/
+.mypy_cache/
+.coverage
+
+# Specific temporary files
+temp/
+tmp/
+.env
+.DS_Store
