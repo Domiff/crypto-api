@@ -1,10 +1,14 @@
-from datetime import datetime
+import typing
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.models import Btc, Eth
+
+if typing.TYPE_CHECKING:
+    from datetime import datetime
+
+    from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def get_all_data(session: AsyncSession, ticker: str):

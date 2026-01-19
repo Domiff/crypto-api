@@ -5,7 +5,7 @@ from src.database.models import Btc, Eth
 
 
 @pytest.mark.anyio
-async def test_get_all_data_btc(session):
+async def test_get_all_data(session):
     data_btc = await get_all_data(session, "btc")
     data_eth = await get_all_data(session, "eth")
     assert data_btc is not None
