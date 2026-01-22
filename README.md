@@ -53,7 +53,7 @@ docker compose up --build
 
 ### 4. Применить миграции для базы данных
 ```commandline
-docker compose exec web alembic upgrade head
+docker compose exec api alembic upgrade head
 ```
 
 ---
