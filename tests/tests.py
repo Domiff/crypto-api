@@ -1,7 +1,7 @@
 import pytest
 
 from src.api.service import get_all_data, get_last_price, get_ticker_with_date_filter
-from src.database.models import Btc, Eth
+from src.core.models import Btc, Eth
 
 
 @pytest.mark.anyio

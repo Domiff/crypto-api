@@ -68,12 +68,11 @@ flowchart TB
 │   │   ├── service.py            # Fetch + persist prices
 │   │   ├── tasks.py              # Celery tasks / schedule
 │   │   └── urls.py               # Deribit URL helpers
-│   ├── database/
-│   │   ├── connection.py         # Async session dependency
-│   │   └── models.py
-│   └── settings/
+│   └── core/
 │       ├── celery_app.py
-│       └── config.py             # Pydantic settings from env
+│       ├── config.py             # Pydantic settings from env
+│       ├── database.py           # Async session dependency
+│       └── models.py
 ├── tests/
 │   ├── conftest.py
 │   └── tests.py
@@ -99,7 +98,7 @@ Create **`.env`** at the **repository root** (gitignored; do not commit secrets)
 | -------- | ------- |
 | `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` | PostgreSQL database and credentials |
 | `POSTGRES_HOST`, `POSTGRES_PORT` | e.g. `pg` and `5432` in Compose; `127.0.0.1` when Postgres runs on the host |
-| `BASE_URL`, `BTC`, `ETH` | Deribit-related settings (see `src/settings/config.py` / client code) |
+| `BASE_URL`, `BTC`, `ETH` | Deribit-related settings (see `src/core/config.py` / client code) |
 | `CELERY_BROKER_URL` | Celery broker, e.g. `amqp://user:pass@rabbitmq:5672//` in Compose |
 | `RABBITMQ_DEFAULT_USER`, `RABBITMQ_DEFAULT_PASS` | RabbitMQ credentials (used by the `rabbitmq` service) |
 
@@ -120,7 +119,7 @@ Create **`.env`** at the **repository root** (gitignored; do not commit secrets)
    ```
 5. Start Celery (from repo root; broker must match `CELERY_BROKER_URL`):
    ```bash
-   uv run celery -A src.settings.celery_app worker -l info --beat
+   uv run celery -A src.core.celery_app worker -l info --beat
    ```
 
 ## Docker Compose

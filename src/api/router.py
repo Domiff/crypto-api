@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from src.api.annotations import date, ticker_query
 from src.api.service import get_all_data, get_last_price, get_ticker_with_date_filter
-from src.database.connection import SessionDep
+from src.core.database import SessionDep
 
 router = APIRouter(tags=["Crypto"])
 

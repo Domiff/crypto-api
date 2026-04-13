@@ -2,9 +2,9 @@ from datetime import timedelta
 
 from celery import Celery
 
-from src.settings.config import settings
+from src.core.config import settings
 
-app = Celery("tasks", broker=settings.celery.CELERY_BROKER_URL)
+app = Celery("tasks", broker=settings.CELERY_BROKER_URL)
 app.autodiscover_tasks(["src.client"])
 
 

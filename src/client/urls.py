@@ -1,7 +1,7 @@
-from src.settings.config import settings
+from src.core.config import settings
 
 urls = {
-    "base": settings.api.BASE_URL,
-    "btc": settings.api.BTC,
-    "eth": settings.api.ETH,
+    "base": settings.BASE_URL,
+    "btc": settings.BTC,
+    "eth": settings.ETH,
 }

@@ -3,7 +3,7 @@ import asyncio
 from celery import shared_task
 
 from src.client.service import prepare_to_task
-from src.database.connection import create_celery_sessionmaker
+from src.core.database import create_celery_sessionmaker
 
 
 @shared_task(bind=True, autoretry_for=(Exception,), retry_backoff=10)

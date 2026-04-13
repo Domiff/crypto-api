@@ -3,7 +3,7 @@ import typing
 from fastapi import HTTPException, status
 from sqlalchemy import select
 
-from src.database.models import Btc, Eth
+from src.core.models import Btc, Eth
 
 if typing.TYPE_CHECKING:
     from datetime import datetime

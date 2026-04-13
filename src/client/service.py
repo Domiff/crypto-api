@@ -1,6 +1,6 @@
 from src.client.crypto_client import CryptoClient
 from src.client.urls import urls
-from src.database.models import Btc, Eth
+from src.core.models import Btc, Eth
 
 
 async def get_crypto_currency():

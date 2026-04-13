@@ -33,7 +33,7 @@ services:
 
   celery-worker:
     build: .
-    command: celery -A src.settings.celery_app worker -l info --beat
+    command: celery -A src.core.celery_app worker -l info --beat
     volumes:
       - .:/app
     depends_on:
