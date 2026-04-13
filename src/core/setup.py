@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from src.api.router import router
+from src.core.database import ping_database
 
 
 @asynccontextmanager
@@ -21,7 +22,7 @@ def create_app() -> FastAPI:
 
     setup_middlewares(app)
     setup_healthcheck(app)
-    app.include_router(router, tags=["crypto"])
+    app.include_router(router)
 
     return app
 
@@ -43,4 +44,4 @@ def setup_middlewares(app: FastAPI) -> None:
 def setup_healthcheck(app: FastAPI) -> None:
     @app.get("/health", tags=["health"])
     async def health() -> bool:
-        return True
+        return await ping_database()
