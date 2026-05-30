@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from src.api.router import router
+from src.crypto.router import router
 from src.core.database import ping_database
 
 
