@@ -1,10 +1,7 @@
-import pytest
-
-from src.api.service import get_all_data, get_last_price, get_ticker_with_date_filter
 from src.core.models import Btc, Eth
+from src.crypto.repository import get_all_data, get_last_price, get_ticker_with_date_filter
 
 
-@pytest.mark.anyio
 async def test_get_all_data(session):
     data_btc = await get_all_data(session, "btc")
     data_eth = await get_all_data(session, "eth")
@@ -14,7 +11,6 @@ async def test_get_all_data(session):
     assert isinstance(data_eth, list)
 
 
-@pytest.mark.anyio
 async def test_get_last_price(session):
     data_btc = await get_last_price(session, "btc")
     data_eth = await get_last_price(session, "eth")
@@ -24,7 +20,6 @@ async def test_get_last_price(session):
     assert isinstance(data_eth, Eth)
 
 
-@pytest.mark.anyio
 async def test_get_ticker_with_date_filter(session, start, end):
     data_btc = await get_ticker_with_date_filter(session, "btc", start, end)
     data_eth = await get_ticker_with_date_filter(session, "eth", start, end)
