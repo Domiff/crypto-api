@@ -10,7 +10,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
-    services:      
+    services:
       postgres:
         image: postgres:16
         env:
@@ -26,13 +26,20 @@ jobs:
           --health-retries=5
 
     env:
-      IS_DEBUG: false
+      IS_DEBUG: "false"
+      IS_DOCKERIZED: "false"
 
       POSTGRES_DB: test_db
       POSTGRES_USER: test_user
       POSTGRES_PASSWORD: test_pass
       POSTGRES_HOST: localhost
       POSTGRES_PORT: 5432
+
+      BASE_URL: https://test.deribit.com/api/v2/public/
+      BTC: ticker?instrument_name=BTC-PERPETUAL
+      ETH: ticker?instrument_name=ETH-PERPETUAL
+
+      CELERY_BROKER_URL: amqp://guest:guest@localhost:5672
 
     steps:
       - name: Checkout repository
@@ -42,6 +49,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.14"
+          allow-prereleases: true
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -50,9 +58,6 @@ jobs:
 
       - name: Install dependencies
         run: uv sync
-        
-      - name: Run migrations
-        run: uv run alembic upgrade head
-        
+
       - name: Run tests
         run: uv run pytest
