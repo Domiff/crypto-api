@@ -21,36 +21,6 @@ A **Deribit** client and **FastAPI** service for cryptocurrency **index prices**
 
 ## Application structure
 
-### Architecture
-
-```mermaid
-flowchart TB
-    subgraph external["External"]
-        DR[Deribit API]
-    end
-
-    subgraph workers["Background"]
-        CW[Celery worker + beat]
-        RMQ[(RabbitMQ — broker)]
-        CW <--> RMQ
-    end
-
-    subgraph api_layer["API"]
-        F[FastAPI]
-    end
-
-    subgraph data["Data"]
-        PG[(PostgreSQL)]
-    end
-
-    CW -->|aiohttp| DR
-    CW --> PG
-    F --> PG
-    Clients([HTTP clients]) --> F
-```
-
-### Repository tree
-
 ```text
 .
 ├── alembic/
