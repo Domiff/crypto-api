@@ -1,23 +1,14 @@
-from collections.abc import AsyncGenerator
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.crypto.router import router
 from src.core.database import ping_database
-
-
-@asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
-    yield
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Crypto Client",
         version="1",
-        lifespan=lifespan,
     )
 
     setup_middlewares(app)

@@ -12,11 +12,3 @@ class Base(DeclarativeBase):
     index_price: Mapped[float]
     instrument_name: Mapped[str]
     timestamp: Mapped[int]
-
-
-class Btc(Base):
-    pass
-
-
-class Eth(Base):
-    pass

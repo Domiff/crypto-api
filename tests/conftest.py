@@ -3,7 +3,8 @@ from datetime import datetime
 import pytest
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from src.core.models import Base, Btc, Eth
+from src.core.models import Base
+from src.crypto.models import Btc, Eth
 
 
 @pytest.fixture

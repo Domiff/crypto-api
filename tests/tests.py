@@ -1,4 +1,4 @@
-from src.core.models import Btc, Eth
+from src.crypto.models import Btc, Eth
 from src.crypto.repository import get_all_data, get_last_price, get_ticker_with_date_filter
 
 
