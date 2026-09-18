@@ -1,4 +1,6 @@
-from collections.abc import AsyncGenerator
+from collections.abc import (
+    AsyncGenerator,  # noqa: TC003 — FastAPI читает аннотацию в рантайме
+)
 from typing import Annotated
 
 from fastapi import Depends
@@ -7,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from src.core.config import settings
 
-fast_api_engine = create_async_engine(settings.DB_URL)
+fast_api_engine = create_async_engine(settings.db.DB_URL)
 async_session = async_sessionmaker(fast_api_engine, expire_on_commit=False)
 
 

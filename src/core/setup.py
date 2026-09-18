@@ -1,14 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.crypto.router import router
+from src.core.config import settings
 from src.core.database import ping_database
+from src.crypto.router import router
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="Crypto Client",
-        version="1",
+        title=settings.app.APP_TITLE,
+        version=settings.app.APP_VERSION,
     )
 
     setup_middlewares(app)

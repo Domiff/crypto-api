@@ -1,15 +1,16 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.pool import StaticPool
 
 from src.core.models import Base
-from src.crypto.models import Btc, Eth
+from src.crypto.models import CryptoCurrency
 
 
 @pytest.fixture
 async def async_engine():
-    engine = create_async_engine("sqlite+aiosqlite:///./crypto_test.db", echo=False)
+    engine = create_async_engine("sqlite+aiosqlite://", poolclass=StaticPool)
     async with engine.begin() as connection:
         await connection.run_sync(Base.metadata.create_all)
     yield engine
@@ -22,15 +23,23 @@ async def session(async_engine):
     async with async_session() as session:
         session.add_all(
             [
-                Btc(
-                    index_price=100_000.0,
-                    instrument_name="BTC_USD",
-                    timestamp=1_768_708_800,
+                CryptoCurrency(
+                    ticker="btc",
+                    index_price=90_000.0,
+                    instrument_name="btc_usd",
+                    created_at=datetime(2026, 1, 17, 12, tzinfo=UTC),
                 ),
-                Eth(
+                CryptoCurrency(
+                    ticker="btc",
+                    index_price=100_000.0,
+                    instrument_name="btc_usd",
+                    created_at=datetime(2026, 1, 18, 12, tzinfo=UTC),
+                ),
+                CryptoCurrency(
+                    ticker="eth",
                     index_price=4_000.0,
-                    instrument_name="ETH_USD",
-                    timestamp=1_768_708_800,
+                    instrument_name="eth_usd",
+                    created_at=datetime(2026, 1, 18, 12, tzinfo=UTC),
                 ),
             ]
         )
@@ -40,9 +49,9 @@ async def session(async_engine):
 
 @pytest.fixture
 def start():
-    return datetime(2026, 1, 18)
+    return datetime(2026, 1, 18, tzinfo=UTC)
 
 
 @pytest.fixture
 def end():
-    return datetime(2026, 1, 19)
+    return datetime(2026, 1, 19, tzinfo=UTC)

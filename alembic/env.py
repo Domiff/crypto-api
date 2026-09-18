@@ -6,9 +6,11 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-from src.core.models import Base
-from src.crypto.models import Btc, Eth
 from src.core.config import settings
+from src.core.models import Base
+from src.crypto.models import (
+    CryptoCurrency,  # noqa: F401 — регистрирует модель в Base.metadata
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -32,7 +34,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-config.set_main_option("sqlalchemy.url", settings.DB_URL)
+config.set_main_option("sqlalchemy.url", settings.db.DB_URL)
 
 
 def run_migrations_offline() -> None:
