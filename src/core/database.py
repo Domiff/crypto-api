@@ -1,5 +1,5 @@
 from collections.abc import (
-    AsyncGenerator,  # noqa: TC003 — FastAPI читает аннотацию в рантайме
+    AsyncGenerator,  # noqa
 )
 from typing import Annotated
 
@@ -19,11 +19,6 @@ async def get_session() -> AsyncGenerator[AsyncSession]:
 
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
-
-
-def create_celery_sessionmaker() -> async_sessionmaker[AsyncSession]:
-    celery_engine = create_async_engine(settings.DB_URL, pool_pre_ping=True)
-    return async_sessionmaker(celery_engine, expire_on_commit=False)
 
 
 async def ping_database() -> bool:

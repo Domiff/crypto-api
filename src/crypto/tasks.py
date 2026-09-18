@@ -1,26 +1,39 @@
 import asyncio
+from datetime import timedelta
 
-from celery import shared_task
-
+from src.core.broker import broker
 from src.core.config import settings
-from src.core.database import create_celery_sessionmaker
-from src.core.http_client import CryptoClient
+from src.core.database import async_session
+from src.core.http import CryptoClient
 from src.crypto.repository import add_crypto_data
 
-
-async def _fetch_and_save(session) -> None:
-    async with CryptoClient(base_url=settings.BASE_URL) as client:
-        btc = await client.get(settings.BTC)
-        eth = await client.get(settings.ETH)
-    await add_crypto_data(btc, eth, session)
+INSTRUMENTS = {
+    "btc": "BTC-PERPETUAL",
+    "eth": "ETH-PERPETUAL",
+}
 
 
-@shared_task(bind=True, autoretry_for=(Exception,), retry_backoff=10)
-def task_get_crypto_currency(self):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    session = create_celery_sessionmaker()
+@broker.task(
+    task_name="fetch_crypto_prices",
+    schedule=[
+        {
+            "interval": timedelta(seconds=settings.crypto.INTERVAL),
+            "schedule_id": "fetch_crypto_prices",
+        }
+    ],
+    retry_on_error=True,
+)
+async def fetch_crypto_prices() -> None:
+    client = CryptoClient()
     try:
-        loop.run_until_complete(_fetch_and_save(session))
+        prices = await asyncio.gather(
+            *(
+                client.get(f"ticker?instrument_name={instrument}")
+                for instrument in INSTRUMENTS.values()
+            )
+        )
     finally:
-        loop.close()
+        await client.session.close()
+
+    async with async_session() as session:
+        await add_crypto_data(session, dict(zip(INSTRUMENTS, prices, strict=True)))

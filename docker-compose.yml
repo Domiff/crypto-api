@@ -1,3 +1,12 @@
+x-app: &app
+  build:
+    dockerfile: Dockerfile
+  env_file:
+    - .env
+  environment:
+    IS_DEBUG: "false"
+  restart: unless-stopped
+
 services:
   pg:
     image: postgres:16
@@ -7,41 +16,47 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      start_period: 5s
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   api:
-    build:
-      dockerfile: Dockerfile
+    <<: *app
     command: uvicorn src.main:app --host 0.0.0.0 --port 8080
-    env_file:
-      - .env
     ports:
       - "8080:8080"
     depends_on:
-      - pg
+      pg:
+        condition: service_healthy
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    env_file:
-      - .env
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+  redis:
+    image: redis:8-alpine
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      start_period: 5s
+      interval: 1m
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
 
-  celery-worker:
-    build: .
-    command: celery -A src.core.celery worker -l info --beat
-    volumes:
-      - .:/app
+  taskiq-worker:
+    <<: *app
+    command: taskiq worker src.core.broker:broker src.crypto.tasks
     depends_on:
-      - rabbitmq
-      - api
-    env_file:
-      - .env
+      pg:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  taskiq-scheduler:
+    <<: *app
+    command: taskiq scheduler src.core.broker:scheduler src.crypto.tasks
+    depends_on:
+      redis:
+        condition: service_healthy
 
 volumes:
   pgdata:
-  rabbitmq_data:
