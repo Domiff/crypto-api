@@ -1,4 +1,4 @@
-name: Tests
+name: Lint
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  tests:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,5 +23,8 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
-      - name: Run tests
-        run: uv run pytest
+      - name: Ruff check
+        run: uv run ruff check .
+
+      - name: Ruff format
+        run: uv run ruff format --check .

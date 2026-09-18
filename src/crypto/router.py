@@ -3,8 +3,14 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, HTTPException, Query, status
 
-from src.core.database import SessionDep
-from src.crypto.repository import get_all_data, get_last_price, get_ticker_with_date_filter
+from src.core.database import (
+    SessionDep,  # noqa
+)
+from src.crypto.repository import (
+    get_all_data,
+    get_last_price,
+    get_ticker_with_date_filter,
+)
 
 router = APIRouter(tags=["Crypto"])
 
