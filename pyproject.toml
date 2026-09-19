@@ -44,9 +44,8 @@ select = [
     "B",
     "DJ",
     "UP",
-    "TCH",
 ]
-ignore = ["E501"]
+ignore = ["E501", "TCH"]
 fixable = ["ALL"]
 unfixable = []
 
