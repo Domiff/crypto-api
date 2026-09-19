@@ -1,15 +1,31 @@
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.core.broker import broker
 from src.core.config import settings
 from src.core.database import ping_database
 from src.crypto.router import router
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
+    if not broker.is_worker_process:
+        await broker.startup()
+
+    yield
+
+    if not broker.is_worker_process:
+        await broker.shutdown()
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app.APP_TITLE,
         version=settings.app.APP_VERSION,
+        lifespan=lifespan,
     )
 
     setup_middlewares(app)
